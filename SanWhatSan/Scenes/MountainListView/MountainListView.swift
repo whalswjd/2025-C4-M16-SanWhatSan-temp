@@ -15,6 +15,10 @@ struct MountainListView: View {
         Text("MountainListView")
         NavigationStack{
             VStack{
+                
+                Map()
+                    .cornerRadius(20)
+                    .padding(.vertical)
                 MountainStackCardView(title: "운제산",description: "산1"){
                     dismiss()
                 }
