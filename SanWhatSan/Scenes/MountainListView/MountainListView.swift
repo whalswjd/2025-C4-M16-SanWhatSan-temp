@@ -10,6 +10,11 @@ import SwiftUI
 struct MountainListView: View {
     var body: some View {
         Text("MountainListView")
+        NavigationStack{
+            VStack{
+                
+            }
+        }
     }
 }
 
