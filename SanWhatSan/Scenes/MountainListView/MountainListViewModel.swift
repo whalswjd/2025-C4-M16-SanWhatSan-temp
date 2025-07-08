@@ -28,12 +28,13 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
            locationManager.desiredAccuracy = kCLLocationAccuracyBest
        }
     
-    func requestLocationAcess() {
+    func requestLocationAccess() {
         let status = locationManager.authorizationStatus
         handleAuthoStatus(status)
     }
     
     private func handleAuthoStatus(_ status: CLAuthorizationStatus){
+        print("🟡 권한 상태: \(status.rawValue)")
         DispatchQueue.main.async {
             self.shouldShowAlert = false
         }
@@ -59,21 +60,23 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.last else { return }
-        print("currentLocation: \(currentLocation)")
+        print("위치 갱신됨: \(currentLocation)")
         DispatchQueue.main.async {
             self.userLocation = currentLocation
             self.updateClosestMountains(from: currentLocation)
         }
     }
     
-    //순서 바꿈
+    //거리계산 !
     private func updateClosestMountains(from location: CLLocation){
+        print("거리 계산 시작")
         let sorted = mountains.sorted {
             let d1 = CLLocation(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude).distance(from: location)
             let d2 = CLLocation(latitude: $1.coordinate.latitude, longitude: $1.coordinate.longitude).distance(from: location)
             
             return d1 < d2
         }
+        print("가장 가까운 산: \(sorted.first?.name ?? "없음")")
         self.closestMountains = sorted
     }
 }

@@ -9,40 +9,81 @@ import SwiftUI
 import MapKit
 
 struct MountainListView: View {
+    
     @Environment(\.dismiss) private var dismiss
-    
     @StateObject private var viewModel = MountainListViewModel()
+    @State var chosenMountain: Mountain?    //binding 변경
     
-    let mountains: [Mountain] = [
-            Mountain(name: "운제산", description: "경북 경산", coordinate: CLLocationCoordinate2D(latitude: 35.8401, longitude: 128.7781)),
-            Mountain(name: "도음산", description: "경북 경산", coordinate: CLLocationCoordinate2D(latitude: 35.8322, longitude: 128.7993)),
-            Mountain(name: "봉좌산", description: "경북 경산", coordinate: CLLocationCoordinate2D(latitude: 35.8498, longitude: 128.7412))
-        ]
+    @State private var region = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 35.85, longitude: 128.57),
+        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+    )
     
-    // 하드코딩
+    //지도중심 따라다니는거 ~
+    @State private var cameraPosition: MapCameraPosition = .automatic
     
-    //산 이름 배열
     
-    //그 다음에 현재 위치 가져오고
-    
-    // 이름 -> 좌표 검색 & 거리 계산
-    
-
     var body: some View {
         NavigationStack{
             VStack{
-                
-                Map()
+                // 이거는 원래 카메라뷰에 들어가야 할 내용인디 일단 이 뷰에다가 할게용 !
+                if let selected = chosenMountain ?? viewModel.closestMountains.first {
+                    Text("선택한 산: \(selected.name)")
+                        .font(.headline)
+                        .padding(.top)
+
+                    Map(position: $cameraPosition) {
+                        Marker(selected.name, coordinate: selected.coordinate)
+                    }
                     .cornerRadius(20)
-                    .padding(.vertical)
                     .frame(height: 300)
+                    .padding(.bottom)
+                } else {
+                    Text("위치 기반 산 검색이 아직 준비되지 않았습니다.")
+                        .font(.headline)
+                        .padding(.top)
+                }
+                //
                 
-                ForEach(mountains) { mountain in
-                    MountainStackCardView(title: mountain.name,description: mountain.description) {
-                        dismiss()
+                ForEach(viewModel.closestMountains) { mountain in
+                    MountainStackCardView(
+                        title: mountain.name,
+                        description: "위도: \(mountain.coordinate.latitude), 경도: \(mountain.coordinate.longitude)"
+                    ) {
+                        chosenMountain = mountain
+                        //dismiss()
                     }
                 }
-
+                
+            }
+            .onAppear{
+                viewModel.requestLocationAccess()
+                
+            }
+            .onChange(of: viewModel.closestMountains) {
+                if chosenMountain == nil,
+                   let first = viewModel.closestMountains.first {
+                    chosenMountain = first
+                    cameraPosition = .region(MKCoordinateRegion(
+                        center: first.coordinate,
+                        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+                    ))
+                }
+            }
+            .onChange(of: chosenMountain) {
+                if let selected = chosenMountain {
+                        withAnimation {
+                            cameraPosition = .region(
+                                MKCoordinateRegion(
+                                    center: selected.coordinate,
+                                    span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+                                )
+                            )
+                        }
+                    }
+            }
+            .alert("위치 권한이 필요합니다", isPresented: $viewModel.shouldShowAlert){
+                Button("OK", role: .cancel){}
             }
             .padding(.horizontal)
             .padding(.vertical)
@@ -53,5 +94,5 @@ struct MountainListView: View {
 
 
 #Preview {
-    MountainListView()
+    //MountainListView()
 }
