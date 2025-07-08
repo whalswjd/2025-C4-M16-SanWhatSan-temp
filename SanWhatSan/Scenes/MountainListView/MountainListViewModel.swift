@@ -15,7 +15,7 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     @Published var closestMountains: [Mountain] = []
     @Published var shouldShowAlert = false
     
-    
+    //temp data
     private let mountains: [Mountain] = [
         Mountain(name: "운제산", description:"경북", coordinate: CLLocationCoordinate2D(latitude: 35.8401, longitude: 128.5554)),
            Mountain(name: "도음산", description:"경북", coordinate: CLLocationCoordinate2D(latitude: 35.8725, longitude: 128.6021)),
@@ -30,11 +30,11 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     
     func requestLocationAccess() {
         let status = locationManager.authorizationStatus
-        handleAuthoStatus(status)
+        handleAuthStatus(status)
     }
     
-    private func handleAuthoStatus(_ status: CLAuthorizationStatus){
-        print("🟡 권한 상태: \(status.rawValue)")
+    private func handleAuthStatus(_ status: CLAuthorizationStatus){
+        print("권한 상태: \(status.rawValue)")
         DispatchQueue.main.async {
             self.shouldShowAlert = false
         }
@@ -55,7 +55,7 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        handleAuthoStatus(manager.authorizationStatus)
+        handleAuthStatus(manager.authorizationStatus)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
