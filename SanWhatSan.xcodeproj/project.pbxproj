@@ -10,9 +10,22 @@
 		6941D1232E1BB125005ECDFE /* SanWhatSan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SanWhatSan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6993CA242E1CA96B008FE70D /* Exceptions for "SanWhatSan" folder in "SanWhatSan" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 6941D1222E1BB125005ECDFE /* SanWhatSan */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6941D1252E1BB125005ECDFE /* SanWhatSan */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6993CA242E1CA96B008FE70D /* Exceptions for "SanWhatSan" folder in "SanWhatSan" target */,
+			);
 			path = SanWhatSan;
 			sourceTree = "<group>";
 		};
@@ -255,6 +268,10 @@
 				DEVELOPMENT_TEAM = F8W6CGBKZ4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SanWhatSan/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치를 기반으로 정보를 제공하기 위해 동의가 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "앱을 사용하는 동안 위치 정보를 사용합니다. ";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치를 기반으로 정보를 제공하기 위해 동의가 필요합니다. ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -284,6 +301,10 @@
 				DEVELOPMENT_TEAM = F8W6CGBKZ4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SanWhatSan/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치를 기반으로 정보를 제공하기 위해 동의가 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "앱을 사용하는 동안 위치 정보를 사용합니다. ";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치를 기반으로 정보를 제공하기 위해 동의가 필요합니다. ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
