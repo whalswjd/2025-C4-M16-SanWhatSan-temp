@@ -39,19 +39,25 @@ struct MountainListView: View {
                     .frame(height: 300)
                     .padding(.bottom)
                 } else {
-                    Text("위치 기반 산 검색이 아직 준비되지 않았습니다.")
+                    Text("선택된 산 없음")
                         .font(.headline)
                         .padding(.top)
                 }
                 //
-                
-                ForEach(viewModel.closestMountains) { mountain in
-                    MountainStackCardView(
-                        title: mountain.name,
-                        description: "위도: \(mountain.coordinate.latitude), 경도: \(mountain.coordinate.longitude)"
-                    ) {
-                        chosenMountain = mountain
-                        dismiss()
+                if viewModel.closestMountains.isEmpty {
+                    Text("주변 100km 이내에 산이 없습니다 🏞️")
+                        .font(.headline)
+                        .padding()
+                }
+                else{
+                    ForEach(viewModel.closestMountains) { mountain in
+                        MountainStackCardView(
+                            title: mountain.name,
+                            description: "위도: \(mountain.coordinate.latitude), 경도: \(mountain.coordinate.longitude)"
+                        ) {
+                            chosenMountain = mountain
+                            dismiss()
+                        }
                     }
                 }
                 
