@@ -18,7 +18,7 @@ struct CameraView: View {
         NavigationStack{
             GeometryReader { geometry in
                 let width = geometry.size.width
-                let height = width * 4 / 3      // 4:3 비율
+                let height = width * 4 / 3
                 VStack{
                     
                     Spacer()
