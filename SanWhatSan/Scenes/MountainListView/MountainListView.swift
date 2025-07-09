@@ -12,7 +12,7 @@ struct MountainListView: View {
     
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = MountainListViewModel()
-    @State var chosenMountain: Mountain?    //binding 변경
+    @Binding var chosenMountain: Mountain?    //binding 변경
     
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 35.85, longitude: 128.57),
@@ -51,7 +51,7 @@ struct MountainListView: View {
                         description: "위도: \(mountain.coordinate.latitude), 경도: \(mountain.coordinate.longitude)"
                     ) {
                         chosenMountain = mountain
-                        //dismiss()
+                        dismiss()
                     }
                 }
                 
