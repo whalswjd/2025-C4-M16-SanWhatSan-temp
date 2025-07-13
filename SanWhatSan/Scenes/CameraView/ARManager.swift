@@ -20,14 +20,23 @@ class ARManager {
         let config = ARWorldTrackingConfiguration()
         config.planeDetection = [.horizontal]
         config.environmentTexturing = .automatic
+        
+        // LiDAR 기반 지면 재구성 (Scene Mesh + 분류 포함)
+        if ARWorldTrackingConfiguration.supportsSceneReconstruction(.meshWithClassification) {
+            config.sceneReconstruction = .meshWithClassification
+        } else {
+            print("이 기기는 LiDAR 기반 재구성을 지원하지 않습니다.")
+        }
 
         if ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth) {
             config.frameSemantics.insert(.personSegmentationWithDepth)
         }
+        
+        view.renderOptions.remove(.disablePersonOcclusion)
 
         view.session.run(config)
 
-        view.debugOptions = [.showFeaturePoints, .showWorldOrigin, .showAnchorOrigins]
+//        view.debugOptions = [.showFeaturePoints, .showWorldOrigin, .showAnchorOrigins]
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         view.addGestureRecognizer(tapGesture)
@@ -49,8 +58,20 @@ class ARManager {
         let config = ARWorldTrackingConfiguration()
         config.planeDetection = [.horizontal]
         config.environmentTexturing = .automatic
-        arView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
+
+        if ARWorldTrackingConfiguration.supportsSceneReconstruction(.meshWithClassification) {
+            config.sceneReconstruction = .meshWithClassification
+        }
+
+        if ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth) {
+            config.frameSemantics.insert(.personSegmentationWithDepth)
+        }
+
+        arView.renderOptions.remove(.disablePersonOcclusion)
+
+        arView.session.run(config)
     }
+
 
     func placeModel(at point: CGPoint) {
         guard let arView,
@@ -74,7 +95,7 @@ class ARManager {
             material.baseColor.texture = .init(baseColorTexture)
             material.normal.texture = .init(normalMapTexture)
             material.roughness.scale = 1.0  // 선택적 설정
-            material.metallic.scale = 1.0   // 선택적 설정
+            material.metallic.scale = 5.0   // 선택적 설정
 
             // 모델 엔티티로 캐스팅 및 머티리얼 적용
             if let modelEntity = model as ModelEntity? {
