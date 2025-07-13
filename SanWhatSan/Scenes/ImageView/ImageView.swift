@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ImageView: View {
     let image: UIImage
-    let onRetake: () -> Void // ❌ 버튼용 콜백
+//    let onRetake: () -> Void // ❌ 버튼용 콜백
     @State private var showShareSheet = false
     @State private var showSaveAlert = false
 
@@ -26,7 +26,7 @@ struct ImageView: View {
 
             HStack(spacing: 30) {
                 Button(action: {
-                    onRetake()
+//                    onRetake()
                 }) {
                     Label("닫기", systemImage: "xmark.circle.fill")
                         .font(.title)
@@ -64,9 +64,8 @@ struct ImageView: View {
 
 #Preview {
     ImageView(
-        image: UIImage(named: "FakePhoto")!, // 임시 이미지로 Assets에 있는 FakePhoto 사용함
+        image: UIImage(named: "FakePhoto")! // 임시 이미지로 Assets에 있는 FakePhoto 사용함
         //image: UIImage(systemName: "photo")!, // 임시 이미지
-        onRetake: {}
     )
 }
 
