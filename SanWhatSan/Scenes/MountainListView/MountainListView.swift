@@ -63,7 +63,7 @@ struct MountainListView: View {
                 
             }
             .onAppear{
-                viewModel.requestLocationAccess()
+               // viewModel.requestLocationAccess()
                 
             }
             .onChange(of: viewModel.closestMountains) {
