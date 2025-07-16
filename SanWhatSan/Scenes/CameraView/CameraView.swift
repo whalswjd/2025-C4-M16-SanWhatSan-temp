@@ -55,7 +55,6 @@ struct CameraView: View {
             }
             .onAppear {
                 viewModel.startARSession()
-                mountainListViewModel.requestLocationAccess()
             }
             
             // TODO: deprecated -> 나중에 navigationDestination으로 바꾸기(리팩토링)
