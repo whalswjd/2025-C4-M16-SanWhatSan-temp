@@ -34,5 +34,5 @@ struct MountainStackCardView: View {
 }
 
 #Preview {
-    //MountainStackCardView()
+    /*ountainStackCardView(title: "산", description: "위경도", action: () -> Void)*/
 }
