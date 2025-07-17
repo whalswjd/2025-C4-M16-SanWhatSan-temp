@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct SanWhatSanApp: App {
+    @StateObject private var LocationViewModel = MountainListViewModel()
+    //@StateObject private var cameraViewModel = CameraViewModel()
+    
     var body: some Scene {
         WindowGroup {
             CameraView()
+                .onAppear{
+                    LocationViewModel.requestLocationAccess()
+                }
         }
     }
 }
