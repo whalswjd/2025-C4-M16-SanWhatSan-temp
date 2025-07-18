@@ -29,30 +29,30 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
             .assign(to: &$selectedMountain)
     }
 
-    func requestLocationAccess() {
-        let status = locationManager.authorizationStatus
-        handleAuthStatus(status)
-    }
-
-    private func handleAuthStatus(_ status: CLAuthorizationStatus) {
-        print("권한 상태: \(status.rawValue)")
-        DispatchQueue.main.async { self.shouldShowAlert = false }
-
-        switch status {
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        case .restricted, .denied:
-            DispatchQueue.main.async { self.shouldShowAlert = true }
-        case .authorizedAlways, .authorizedWhenInUse:
-            locationManager.startUpdatingLocation()
-        default:
-            break
-        }
-    }
-
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        handleAuthStatus(manager.authorizationStatus)
-    }
+//    func requestLocationAccess() {
+//        let status = locationManager.authorizationStatus
+//        handleAuthStatus(status)
+//    }
+//
+//    private func handleAuthStatus(_ status: CLAuthorizationStatus) {
+//        print("권한 상태: \(status.rawValue)")
+//        DispatchQueue.main.async { self.shouldShowAlert = false }
+//
+//        switch status {
+//        case .notDetermined:
+//            locationManager.requestWhenInUseAuthorization()
+//        case .restricted, .denied:
+//            DispatchQueue.main.async { self.shouldShowAlert = true }
+//        case .authorizedAlways, .authorizedWhenInUse:
+//            locationManager.startUpdatingLocation()
+//        default:
+//            break
+//        }
+//    }
+//
+//    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+//        handleAuthStatus(manager.authorizationStatus)
+//    }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.last else { return }

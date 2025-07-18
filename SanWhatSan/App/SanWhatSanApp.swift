@@ -12,6 +12,7 @@ struct SanWhatSanApp: App {
 //    @StateObject private var LocationViewModel = MountainListViewModel()
     //@StateObject private var cameraViewModel = CameraViewModel()
     @StateObject var coordinator = NavigationCoordinator()
+    var locationService = LocationService.shared
     
     var body: some Scene {
         WindowGroup {
@@ -20,6 +21,9 @@ struct SanWhatSanApp: App {
 //                    LocationViewModel.requestLocationAccess() // TODO: 현재는 CameraView에서 하는데 나중에 앱 실행할 때로 바꾸기(LocationService.swift 따로 빼야 할듯)
 //                }
                 .environmentObject(coordinator)
+                .onAppear{
+                    locationService.requestLocationAccess()
+                }
         }
     }
 }

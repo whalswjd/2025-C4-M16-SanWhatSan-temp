@@ -10,23 +10,22 @@ import MapKit
 
 struct MountainListView: View {
     
-//    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var coordinator: NavigationCoordinator
     @StateObject private var viewModel = MountainListViewModel()
-//    @Binding var chosenMountain: Mountain?    //binding 변경
-    
-    @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 35.85, longitude: 128.57),
-        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
-    )
-    
-    //지도중심 따라다니는거 ~
+    // MARK: 지도 이동 (userLocation)
     @State private var cameraPosition: MapCameraPosition = .automatic
+    
+//    @State private var region = MKCoordinateRegion(
+//        center: CLLocationCoordinate2D(latitude: 35.85, longitude: 128.57),
+//        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+//    )
+    
+    
     
     
     var body: some View {
             VStack{
-                // 이거는 원래 카메라뷰에 들어가야 할 내용인디 일단 이 뷰에다가 할게용 !
+                // MARK: 선택한 산 (header)
                 if let selected = viewModel.selectedMountain {
                     Text("선택한 산: \(selected.name)")
                         .font(.headline)
@@ -55,8 +54,6 @@ struct MountainListView: View {
                             title: mountain.name,
                             description: "위도: \(mountain.coordinate.latitude), 경도: \(mountain.coordinate.longitude)"
                         ) {
-//                            chosenMountain = mountain
-//                            dismiss()
                             viewModel.manager.chosenMountain = mountain
                             coordinator.pop()
                         }
@@ -88,6 +85,7 @@ struct MountainListView: View {
 //                        }
 //                    }
 //            }
+        //MARK: custom Alert
             .alert("위치 권한이 필요합니다", isPresented: $viewModel.shouldShowAlert){
                 Button("OK", role: .cancel){}
             }
