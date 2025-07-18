@@ -38,7 +38,7 @@ class CameraViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         print("placeModel")
     }
 
-    // MARK: 권한 요청은 LocationService 로 이동 완
+    // MARK: 권한 요청은 LocationService 로 이동, 앱 시작점에서 한 번만 요청
     // MARK: - 위치 권한 요청
 //    private func requestLocationAccess() {
 //        let status = locationManager.authorizationStatus
