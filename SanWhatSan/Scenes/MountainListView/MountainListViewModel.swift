@@ -68,6 +68,7 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
            closestMountains.isEmpty,
            location.distance(from: last) < 50 { // 50미터 이하 변화라면 무시
             print("거리 계산 생략")
+            locationManager.stopUpdatingLocation()
             return
         }
 
