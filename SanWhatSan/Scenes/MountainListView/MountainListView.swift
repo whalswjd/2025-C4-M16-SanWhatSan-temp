@@ -15,14 +15,6 @@ struct MountainListView: View {
     // MARK: 지도 이동 (userLocation)
     @State private var cameraPosition: MapCameraPosition = .automatic
     
-//    @State private var region = MKCoordinateRegion(
-//        center: CLLocationCoordinate2D(latitude: 35.85, longitude: 128.57),
-//        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
-//    )
-    
-    
-    
-    
     var body: some View {
             VStack{
                 // MARK: 선택한 산 (header)
@@ -43,6 +35,7 @@ struct MountainListView: View {
                         .padding(.top)
                 }
                 //
+                
                 if viewModel.closestMountains.isEmpty {
                     Text("주변 100km 이내에 산이 없습니다 🏞️")
                         .font(.headline)
