@@ -14,13 +14,15 @@ import MapKit
 final class MountainManager: ObservableObject {
     
     static let shared = MountainManager()
-    private(set) var mountains: [Mountain] = []
-    private var mountainNames: [String] = []    //MARK: 산 이름만 넣어도 될 것 같아요
+    @Published private(set) var mountains: [Mountain] = []
+    private(set) var mountainNames: [String] = []    // MARK: 산 이름만 넣어도 될 것 같아요
     
     @Published var chosenMountain: Mountain?
 
     private init() {
         self.mountains = [
+            
+            //TODO: 추후 삭제
             Mountain(name: "운제산", description: "경북", coordinate: Coordinate(latitude: 35.8401, longitude: 128.5554)),
             Mountain(name: "도음산", description: "경북", coordinate: Coordinate(latitude: 35.8725, longitude: 128.6021)),
             Mountain(name: "봉좌산", description: "경북", coordinate: Coordinate(latitude: 35.8602, longitude: 128.5703))
@@ -28,9 +30,10 @@ final class MountainManager: ObservableObject {
         self.mountainNames = [
             "운제산", "도음산", "봉좌산"
         ]
+    
     }
     
-    // MARK: -산 이름으로 위경도 검색해서 배열로 반환
+    // MARK: -산 이름으로 위경도 검색해서 배열로 반환, 상한선도 여기서 조절 가능 (기본) 
     func searchMountains (names: [String], regionCenter: CLLocationCoordinate2D, radius: CLLocationDistance){
         mountains.removeAll()
         let group = DispatchGroup()

@@ -13,6 +13,7 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     let manager = MountainManager.shared
     
     @Published var selectedMountain: Mountain?
+    @Published var mountains: [Mountain] = []
     
     @Published var userLocation: CLLocation?
     @Published var closestMountains: [Mountain] = []
@@ -27,7 +28,13 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         manager.$chosenMountain
             .receive(on: DispatchQueue.main)
             .assign(to: &$selectedMountain)
+        manager .$mountains
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$mountains)
+
     }
+    
+    
 
 //    func requestLocationAccess() {
 //        let status = locationManager.authorizationStatus
@@ -57,6 +64,15 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.last else { return }
         print("위치 갱신됨: \(currentLocation)")
+        
+        MountainManager.shared.searchMountains(
+            names: MountainManager.shared.mountainNames,
+            regionCenter: currentLocation.coordinate,
+            radius: 50_000
+        )
+        
+        locationManager.stopUpdatingLocation()
+        
         DispatchQueue.main.async {
             self.userLocation = currentLocation
             self.updateClosestMountains(from: currentLocation)
