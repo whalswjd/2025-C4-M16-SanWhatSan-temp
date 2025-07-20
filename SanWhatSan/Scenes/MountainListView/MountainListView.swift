@@ -13,7 +13,11 @@ struct MountainListView: View {
     @EnvironmentObject private var coordinator: NavigationCoordinator
     @StateObject private var viewModel = MountainListViewModel()
     // MARK: 지도 이동 (userLocation)
-    @State private var cameraPosition: MapCameraPosition = .automatic
+//    @State private var cameraPosition: MapCameraPosition = .automatic
+    @State private var region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 36.0, longitude: 128.0),
+            span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        )
     
     var body: some View {
             VStack{
@@ -23,8 +27,20 @@ struct MountainListView: View {
                         .font(.headline)
                         .padding(.top)
 
-                    Map(position: $cameraPosition) {
-                        Marker(selected.name, coordinate: selected.coordinate.clLocationCoordinate2D)
+//                    Map(position: $cameraPosition) {
+//                        Marker(selected.name, coordinate: selected.coordinate.clLocationCoordinate2D)
+//                    }
+                    Map(
+                        coordinateRegion: $region,
+                        interactionModes: .all,
+                        showsUserLocation: true,
+                        userTrackingMode: .constant(.follow),
+                        annotationItems: viewModel.closestMountains
+                    ) { mountain in
+                        MapMarker(
+                            coordinate: mountain.coordinate.clLocationCoordinate2D,
+                            tint: .green
+                        )
                     }
                     .cornerRadius(20)
                     .frame(height: 300)
@@ -64,10 +80,10 @@ struct MountainListView: View {
             }
             .onChange(of: viewModel.closestMountains) {
                 if let first = viewModel.closestMountains.first {
-                    cameraPosition = .region(MKCoordinateRegion(
-                        center: first.coordinate.clLocationCoordinate2D,
-                        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
-                    ))
+//                    cameraPosition = .region(MKCoordinateRegion(
+//                        center: first.coordinate.clLocationCoordinate2D,
+//                        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+//                    ))
                 }
             }
 //            .onChange(of: chosenMountain) {
