@@ -37,10 +37,14 @@ struct MountainListView: View {
                 //
                 
                 if viewModel.closestMountains.isEmpty {
-                    Text("주변 100km 이내에 산이 없습니다 🏞️")
-                        .font(.headline)
-                        .padding()
+                    VStack{
+                        Text("주변 100km 이내에 산이 없습니다 🏞️")
+                            .font(.headline)
+                            .padding()
+                    }
+                    
                 }
+
                 else{
                     ForEach(viewModel.closestMountains) { mountain in
                         MountainStackCardView(

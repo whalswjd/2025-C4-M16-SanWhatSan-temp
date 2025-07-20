@@ -12,7 +12,7 @@ import RealityKit
 struct CameraView: View {
     @EnvironmentObject private var coordinator: NavigationCoordinator
     @StateObject var viewModel = CameraViewModel()
-//    @StateObject var mountainListViewModel = MountainListViewModel()
+    @StateObject var mountainListViewModel = MountainListViewModel()
 //    @State var chosenMountain: Mountain?
     @State var isImageViewActive = false
     @State var capturedImage: UIImage?
@@ -21,7 +21,7 @@ struct CameraView: View {
             VStack {
                 
                 // TODO: chosenMountain
-                if let selected = viewModel.selectedMountain {
+                if let selected = mountainListViewModel.selectedMountain {
                     Text("선택한 산: \(selected.name)")
                         .font(.headline)
                         .padding(.top)

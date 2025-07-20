@@ -7,6 +7,7 @@
 
 import Foundation
 import MapKit
+import Combine
 
 class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager = CLLocationManager()
@@ -25,12 +26,29 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        manager.$chosenMountain
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$selectedMountain)
+//        manager.$chosenMountain
+//            .receive(on: DispatchQueue.main)
+//            .assign(to: &$selectedMountain)
+        //manager.
         manager .$mountains
             .receive(on: DispatchQueue.main)
             .assign(to: &$mountains)
+        locationManager.startUpdatingLocation()
+        
+        // MARK: userLocation 과 mountains 두 값이 모두 업데이트될 때마다 closestMountains 를 계산 -> 이게 안먹음..
+        Publishers
+            .CombineLatest($userLocation.compactMap { $0 }, $mountains)
+            .map { [weak self] loc, _ in
+                self?.manager.getClosestMountains(from: loc) ?? []
+            }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$closestMountains)
+        
+        MountainManager.shared.searchMountains(
+                    names: MountainManager.shared.mountainNames,
+                    regionCenter: CLLocationCoordinate2D(latitude: 36.0, longitude: 128.0),
+                    radius: 100_000
+                )
 
     }
     
@@ -65,18 +83,21 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         guard let currentLocation = locations.last else { return }
         print("위치 갱신됨: \(currentLocation)")
         
-        MountainManager.shared.searchMountains(
-            names: MountainManager.shared.mountainNames,
+        self.manager.searchMountains(
+            names: self.manager.mountainNames,
             regionCenter: currentLocation.coordinate,
             radius: 50_000
         )
-        
-        locationManager.stopUpdatingLocation()
-        
         DispatchQueue.main.async {
             self.userLocation = currentLocation
             self.updateClosestMountains(from: currentLocation)
+            print("locationManager userLocation update")
+            //print(locations.last)
         }
+        
+        //locationManager.stopUpdatingLocation()
+        
+        
     }
 
     private func updateClosestMountains(from location: CLLocation) {
