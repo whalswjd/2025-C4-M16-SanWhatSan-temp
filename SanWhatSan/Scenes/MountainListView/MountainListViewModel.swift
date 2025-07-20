@@ -26,10 +26,10 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//        manager.$chosenMountain
-//            .receive(on: DispatchQueue.main)
-//            .assign(to: &$selectedMountain)
-        //manager.
+        manager.$chosenMountain
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$selectedMountain)
+
         manager .$mountains
             .receive(on: DispatchQueue.main)
             .assign(to: &$mountains)
