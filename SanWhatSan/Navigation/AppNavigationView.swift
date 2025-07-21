@@ -21,10 +21,10 @@ struct AppNavigationView: View {
 //                        ImageView(displayImage: displayImage)
                     case .mountainListView:
                         MountainListView()
-                    case .albumView: //TODO: 나중에 AlbumlView 파일 만들면 주석 해제하기
+                    case .albumView:
                         AlbumView()
                     case .photoDetailView(let displayImage):
-                        PhotoDetailView(displayImage: displayImage) // TODO: 나중에 PhtotoDetailView 파일 만들면 주석 해제하기
+                        PhotoDetailView(displayImage: displayImage)
 //                    case .frameView():
 //                        FrameView()   // TODO: 나중에 FrameView 파일 만들면 주석 해제하기
                     }
