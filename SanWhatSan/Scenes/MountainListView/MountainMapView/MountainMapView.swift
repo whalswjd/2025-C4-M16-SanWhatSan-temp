@@ -20,7 +20,7 @@ struct MountainMapView: View {
                 coordinateRegion: $region,
                 interactionModes: .all,
                 showsUserLocation: true,
-                userTrackingMode: .constant(.none)
+                userTrackingMode: .constant(.follow)
             )
             .ignoresSafeArea(edges: .all)
         }

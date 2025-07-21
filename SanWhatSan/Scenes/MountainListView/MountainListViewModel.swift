@@ -35,7 +35,6 @@ class MountainListViewModel: NSObject, ObservableObject, CLLocationManagerDelega
             .assign(to: &$mountains)
         locationManager.startUpdatingLocation()
         
-        // MARK: userLocation 과 mountains 두 값이 모두 업데이트될 때마다 closestMountains 를 계산 -> 이게 안먹음..
         Publishers
             .CombineLatest($userLocation.compactMap { $0 }, $mountains)
             .map { [weak self] loc, _ in
