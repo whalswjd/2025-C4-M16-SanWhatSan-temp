@@ -29,30 +29,18 @@ struct AlbumView: View {
             VStack(spacing: 0) {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 8) {
-//MARK: - 더미 데이터
-                        ForEach(images.isEmpty ? [UIImage(named: "FakePhoto")!]: images, id: \.self) { image in
-                            ZStack(alignment: .topTrailing) {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .aspectRatio(9/16, contentMode: .fit)
-//                                    .border(Color.red, width: 1) // 디버깅용
-                                    .overlay(
-                                        isSelectionMode && selectedImages.contains(image)
-                                        ? Color.black.opacity(0.35)
-                                        : Color.clear
-                                    )
-                                    .onTapGesture {
-                                        if isSelectionMode {
-                                            toggleSelection(for: image)
-                                        } else {
-                                            selectedImage = image
-//                                            showPhotoDetail = true
-                                            coordinator.push(.photoDetailView(DisplayImage(id: UUID(), image: selectedImage)))
-                                        }
-                                    }
+                        // MARK: - 더미 데이터
+                        if images.isEmpty {
+                            ForEach([UIImage(named: "FakePhoto")!], id: \.self) { image in
+                                photoCell(image)
+                            }
+                        } else {
+                            ForEach(images, id: \.self) { image in
+                                photoCell(image)
                             }
                         }
-//MARK: - 실제 촬영한 사진으로 돌아가게 할 코드
+
+                        // MARK: - 실제 촬영한 사진으로 돌아가게 할 코드
 //                        ForEach(images, id: \.self) { image in
 //                            ZStack(alignment: .topTrailing) {
 //                                Image(uiImage: image)
@@ -188,6 +176,28 @@ struct AlbumView: View {
             .onAppear {
                 fetchRecentPhotos()
             }
+        }
+    }
+
+    // MARK: - 추출한 셀 뷰
+    @ViewBuilder
+    private func photoCell(_ image: UIImage) -> some View {
+        ZStack(alignment: .topTrailing) {
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(9/16, contentMode: .fit)
+                .overlay(
+                    isSelectionMode && selectedImages.contains(image)
+                    ? Color.black.opacity(0.35)
+                    : Color.clear
+                )
+                .onTapGesture {
+                    if isSelectionMode {
+                        toggleSelection(for: image)
+                    } else {
+                        coordinator.push(.photoDetailView(DisplayImage(id: UUID(), image: image)))
+                    }
+                }
         }
     }
 
