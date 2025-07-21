@@ -67,25 +67,42 @@ struct CameraView: View {
                 
                 VStack {
                     Spacer()
-                    Button {
-                        viewModel.arManager.captureSnapshot { image in
-                            if let image = image {
-                                // coordinator 기반으로 뷰 전환
-                                coordinator.push(
-                                    .imageView(DisplayImage(id: UUID(), image: image))
-                                )
-                                // capturedImage = image
-                                // isImageViewActive = true
-                            }
+                    HStack {
+                        Button {
+                            coordinator.push(.albumView)
+                        } label: {
+                            Text("앨범")
                         }
-                    } label: {
-                        Image("CameraButton")
-                            .resizable()
-                            .frame(width: 73, height: 73)
-                            .shadow(color: .black.opacity(0.1), radius: 7.5, x: 0, y: -4)
+                        .padding(35)
                         
+                        Spacer()
+                        
+                        Button {
+                            viewModel.arManager.captureSnapshot { image in
+                                if let image = image {
+                                    // capturedImage = image
+                                    // isImageViewActive = true
+                                    // TODO: 자체 앨범에 저장
+                                }
+                            }
+                        } label: {
+                            Image("CameraButton")
+                                .resizable()
+                                .frame(width: 73, height: 73)
+                                .shadow(color: .black.opacity(0.1), radius: 7.5, x: 0, y: -4)
+                            
+                        }
+                        .padding(.bottom, 32)
+                        
+                        Spacer()
+                        
+                        Button {
+                            
+                        } label: {
+                            Text("정상석")
+                        }
+                        .padding(35)
                     }
-                    .padding(.bottom, 32)
                 }
             }
         }
