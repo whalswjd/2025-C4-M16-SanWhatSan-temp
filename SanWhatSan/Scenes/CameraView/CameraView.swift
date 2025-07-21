@@ -41,13 +41,13 @@ struct CameraView: View {
                     .edgesIgnoringSafeArea(.all)
 
                 Button("촬영") {
-                    viewModel.arManager.captureSnapshot { image in
-                        if let image = image {
-                            coordinator.push(
-                                .imageView(DisplayImage(id: UUID(), image: image))
-                            )
-                        }
-                    }
+//                    viewModel.arManager.captureSnapshot { image in
+//                        if let image = image {
+//                            coordinator.push(
+//                                .imageView(DisplayImage(id: UUID(), image: image))
+//                            )
+//                        }
+//                    }
                 }
                 .padding()
             }
