@@ -18,7 +18,8 @@ struct CameraView: View {
     @StateObject var viewModel = CameraViewModel()
     @State var isImageViewActive = false
     @State var capturedImage: UIImage?
-    
+    @State private var showFlash = false
+
     var body: some View {
         VStack {
             HStack(alignment: .center, spacing: 95) {
@@ -45,7 +46,7 @@ struct CameraView: View {
                             .foregroundColor(.black)
                     }
                 }
-                
+
                 Button {
                     coordinator.push(.mountainListView)
                 } label: {
@@ -60,11 +61,17 @@ struct CameraView: View {
             .padding(.top, 56)
             .padding(.leading, 33)
             .frame(maxWidth: .infinity, alignment: .leading)
-            
+
             ZStack {
                 ARViewContainer(arManager: viewModel.arManager)
                     .ignoresSafeArea()
-                
+
+                if showFlash {
+                    Color.white
+                        .ignoresSafeArea()
+                        .transition(.opacity)
+                }
+
                 VStack {
                     Spacer()
                     HStack {
@@ -74,15 +81,21 @@ struct CameraView: View {
                             Text("앨범")
                         }
                         .padding(35)
-                        
+
                         Spacer()
-                        
+
                         Button {
                             viewModel.arManager.captureSnapshot { image in
                                 if let image = image {
-                                    // capturedImage = image
-                                    // isImageViewActive = true
-                                    // TODO: 자체 앨범에 저장
+                                    PhotoManager.shared.saveImageToLocalPhoto(image)
+                                    withAnimation(.easeIn(duration: 0.05)) {
+                                        showFlash = true
+                                    }
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                        withAnimation(.easeOut(duration: 0.3)) {
+                                            showFlash = false
+                                        }
+                                    }
                                 }
                             }
                         } label: {
@@ -90,14 +103,13 @@ struct CameraView: View {
                                 .resizable()
                                 .frame(width: 73, height: 73)
                                 .shadow(color: .black.opacity(0.1), radius: 7.5, x: 0, y: -4)
-                            
                         }
                         .padding(.bottom, 32)
-                        
+
                         Spacer()
-                        
+
                         Button {
-                            
+
                         } label: {
                             Text("정상석")
                         }
@@ -110,7 +122,7 @@ struct CameraView: View {
             viewModel.startARSession()
         }
     }
-    
+
 }
 
 struct CameraView_Previews: PreviewProvider {

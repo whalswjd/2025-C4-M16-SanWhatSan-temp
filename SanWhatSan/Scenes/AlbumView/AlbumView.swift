@@ -10,17 +10,13 @@ import Photos
 
 struct AlbumView: View {
     @EnvironmentObject private var coordinator: NavigationCoordinator
-//    @Environment(\.dismiss) var dismiss
 
-    @State private var images: [UIImage] = []
-    @State private var selectedImages: Set<UIImage> = []
+    @State private var photos: [Photo] = []
+    @State private var selectedPhotos = Set<Photo>()
 
     @State private var isSelectionMode = false
     @State private var showDeleteAlert = false
-
     @State private var isShareSheetPresented = false
-    @State private var showPhotoDetail = false
-    @State private var selectedImage: UIImage? = nil
 
     let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 3)
 
@@ -29,46 +25,17 @@ struct AlbumView: View {
             VStack(spacing: 0) {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 8) {
-                        // MARK: - 더미 데이터
-                        if images.isEmpty {
-                            ForEach([UIImage(named: "FakePhoto")!], id: \.self) { image in
-                                photoCell(image)
+                        if photos.isEmpty {
+                            if let dummy = UIImage(named: "FakePhoto") {
+                                imageCell(dummy)
                             }
                         } else {
-                            ForEach(images, id: \.self) { image in
-                                photoCell(image)
+                            ForEach(photos) { photo in
+                                if let image = PhotoManager.shared.loadImage(from: photo) {
+                                    imageCell(image, photo)
+                                }
                             }
                         }
-
-                        // MARK: - 실제 촬영한 사진으로 돌아가게 할 코드
-//                        ForEach(images, id: \.self) { image in
-//                            ZStack(alignment: .topTrailing) {
-//                                Image(uiImage: image)
-//                                    .resizable()
-//                                    .aspectRatio(9/16, contentMode: .fit)
-//                                    .overlay(
-//                                        isSelectionMode && selectedImages.contains(image)
-//                                        ? Color.black.opacity(0.35)
-//                                        : Color.clear
-//                                    )
-//                                    .onTapGesture {
-//                                        if isSelectionMode {
-//                                            toggleSelection(for: image)
-//                                        } else {
-//                                            selectedImage = image
-//                                            showPhotoDetail = true
-//                                        }
-//                                    }
-//
-//                                if isSelectionMode {
-//                                    Image(systemName: selectedImages.contains(image) ? "checkmark.circle.fill" : "circle")
-//                                        .resizable()
-//                                        .frame(width: 24, height: 24)
-//                                        .foregroundColor(.blue)
-//                                        .padding(6)
-//                                }
-//                            }
-//                        }
                     }
                     .padding(.horizontal, 8)
                     .padding(.top, 10)
@@ -77,32 +44,31 @@ struct AlbumView: View {
                 if isSelectionMode {
                     Divider()
                     HStack {
-                        Button(action: {
-                            for img in selectedImages {
-                                UIImageWriteToSavedPhotosAlbum(img, nil, nil, nil)
-                            }
-                        }) {
+                        Button {
+                            PhotoManager.shared.saveToPhotoLibrary(Array(selectedPhotos))
+                            selectedPhotos.removeAll()
+                        } label: {
                             Image(systemName: "square.and.arrow.down")
                         }
                         .padding(.leading)
 
                         Spacer()
 
-                        Text("\(selectedImages.count)장 선택됨")
+                        Text("\(selectedPhotos.count)장 선택됨")
                             .font(.subheadline)
                             .foregroundColor(.gray)
 
                         Spacer()
 
-                        Button(action: {
+                        Button {
                             isShareSheetPresented = true
-                        }) {
+                        } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
 
-                        Button(action: {
+                        Button {
                             showDeleteAlert = true
-                        }) {
+                        } label: {
                             Image(systemName: "trash")
                                 .foregroundColor(.red)
                         }
@@ -132,7 +98,7 @@ struct AlbumView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         if isSelectionMode {
-                            selectedImages.removeAll()
+                            selectedPhotos.removeAll()
                         }
                         isSelectionMode.toggle()
                     } label: {
@@ -152,86 +118,52 @@ struct AlbumView: View {
                     title: Text("사진 삭제"),
                     message: Text("선택한 사진을 삭제하겠산?"),
                     primaryButton: .destructive(Text("삭제")) {
-                        images.removeAll { selectedImages.contains($0) }
-                        selectedImages.removeAll()
-                        isSelectionMode = false
+                        for photo in selectedPhotos {
+                            let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("MyAlbum").appendingPathComponent(photo.filename)
+                            try? FileManager.default.removeItem(at: url)
+                        }
+                        selectedPhotos.removeAll()
+                        photos = PhotoManager.shared.loadAllPhotos()
                     },
                     secondaryButton: .cancel()
                 )
             }
-            .sheet(isPresented: $isShareSheetPresented) {
-                ShareSheet(activityItems: Array(selectedImages))
-            }
-//            .sheet(isPresented: $showPhotoDetail) {
-//                if let selectedImage {
-//                    PhotoDetailView(
-//                        image: selectedImage,
-//                        onDelete: {
-//                            images.removeAll { $0 == selectedImage }
-//                        }
-//                    )
-//                    coordinator.push(.photoDetailView(DisplayImage(id: UUID(), image: selectedImage)))
-//                }
-//            }
             .onAppear {
-                fetchRecentPhotos()
+                photos = PhotoManager.shared.loadAllPhotos()
             }
         }
     }
 
-    // MARK: - 추출한 셀 뷰
     @ViewBuilder
-    private func photoCell(_ image: UIImage) -> some View {
+    private func imageCell(_ image: UIImage, _ photo: Photo? = nil) -> some View {
         ZStack(alignment: .topTrailing) {
             Image(uiImage: image)
                 .resizable()
                 .aspectRatio(9/16, contentMode: .fit)
                 .overlay(
-                    isSelectionMode && selectedImages.contains(image)
+                    isSelectionMode && photo != nil && selectedPhotos.contains(photo!)
                     ? Color.black.opacity(0.35)
                     : Color.clear
                 )
                 .onTapGesture {
+                    guard let photo = photo else { return }
                     if isSelectionMode {
-                        toggleSelection(for: image)
+                        if selectedPhotos.contains(photo) {
+                            selectedPhotos.remove(photo)
+                        } else {
+                            selectedPhotos.insert(photo)
+                        }
                     } else {
                         coordinator.push(.photoDetailView(DisplayImage(id: UUID(), image: image)))
                     }
                 }
-        }
-    }
 
-    private func toggleSelection(for image: UIImage) {
-        if selectedImages.contains(image) {
-            selectedImages.remove(image)
-        } else {
-            selectedImages.insert(image)
-        }
-    }
-
-    private func fetchRecentPhotos() {
-        var loadedImages: [UIImage] = []
-
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchOptions.fetchLimit = 50
-
-        let assets = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-        let manager = PHImageManager.default()
-        let imageSize = CGSize(width: 300, height: 300)
-
-        assets.enumerateObjects { asset, _, _ in
-            let options = PHImageRequestOptions()
-            options.deliveryMode = .highQualityFormat
-            options.isSynchronous = true
-            manager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options) { image, _ in
-                if let image = image {
-                    loadedImages.append(image)
-                }
+            if isSelectionMode, let photo = photo {
+                Image(systemName: selectedPhotos.contains(photo) ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(.blue)
+                    .padding(6)
             }
         }
-
-        self.images = loadedImages
     }
 }
 
