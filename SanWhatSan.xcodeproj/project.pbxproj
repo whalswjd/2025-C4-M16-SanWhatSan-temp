@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BB3235FD2E29E7330051A697 /* MountainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3235FC2E29E7330051A697 /* MountainData.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		6941D1232E1BB125005ECDFE /* SanWhatSan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SanWhatSan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB3235FC2E29E7330051A697 /* MountainData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MountainData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -45,6 +50,7 @@
 		6941D11A2E1BB125005ECDFE = {
 			isa = PBXGroup;
 			children = (
+				BB3235FC2E29E7330051A697 /* MountainData.swift */,
 				6941D1252E1BB125005ECDFE /* SanWhatSan */,
 				6941D1242E1BB125005ECDFE /* Products */,
 			);
@@ -132,6 +138,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB3235FD2E29E7330051A697 /* MountainData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,7 +272,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SanWhatSan/Preview Content\"";
-				DEVELOPMENT_TEAM = XNZ8K49A2D;
+				DEVELOPMENT_TEAM = 9WQK867GDY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SanWhatSan/Info.plist;
@@ -301,7 +308,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SanWhatSan/Preview Content\"";
-				DEVELOPMENT_TEAM = XNZ8K49A2D;
+				DEVELOPMENT_TEAM = 9WQK867GDY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SanWhatSan/Info.plist;
