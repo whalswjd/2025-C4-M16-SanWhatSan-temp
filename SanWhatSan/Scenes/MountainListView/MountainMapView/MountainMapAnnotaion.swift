@@ -23,9 +23,6 @@ struct MountainMapAnnotationView: View {
                     .frame(width: 27, height: 27)
                     .foregroundColor(.white)
             }
-            //            ZStack{
-            //                
-            //            }
             
             Text(mountain.name)
                 .font(.caption2)

@@ -14,19 +14,29 @@ struct MountainMapView: View {
     let mountains: [Mountain]
 
     var body: some View {
-        Map(
-          coordinateRegion: $region,
-          interactionModes: .all,
-          showsUserLocation: true,
-          userTrackingMode: .constant(.none),
-          annotationItems: mountains
-        ) { mountain in
-          MapAnnotation(coordinate: mountain.coordinate.clLocationCoordinate2D) {
-            MountainMapAnnotationView(mountain: mountain)
-          }
+        
+        if mountains.isEmpty {
+            Map(
+                coordinateRegion: $region,
+                interactionModes: .all,
+                showsUserLocation: true,
+                userTrackingMode: .constant(.none)
+            )
+            .ignoresSafeArea(edges: .all)
         }
-        .frame(height: 300)
-        .cornerRadius(20)
-        .padding(.bottom)
+        else{
+            Map(
+              coordinateRegion: $region,
+              interactionModes: .all,
+              showsUserLocation: true,
+              userTrackingMode: .constant(.none),
+              annotationItems: mountains
+            ) { mountain in
+              MapAnnotation(coordinate: mountain.coordinate.clLocationCoordinate2D) {
+                MountainMapAnnotationView(mountain: mountain)
+              }
+            }
+            .ignoresSafeArea(edges: .all)
+        }
     }
 }
