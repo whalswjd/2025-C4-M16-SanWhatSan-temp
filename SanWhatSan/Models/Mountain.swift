@@ -15,7 +15,4 @@ struct Mountain: Identifiable, Hashable {
     let description: String
     let coordinate: Coordinate
     
-    var distance: Int
-    let summitMarkerCount: Int
-    
 }
