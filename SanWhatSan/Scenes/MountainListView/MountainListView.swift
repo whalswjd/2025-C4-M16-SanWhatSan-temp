@@ -26,6 +26,16 @@ struct MountainListView: View {
             MountainMapView(region: $region,
                             mountains: viewModel.closestMountains)
             .ignoresSafeArea(.all)
+            
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.5),
+                    Color.white.opacity(0.0)
+                ],
+                startPoint: .bottom,
+                endPoint: .top
+            )
+            .ignoresSafeArea()
             VStack{
                 // MARK: 상단 바
                 HStack {
@@ -53,12 +63,12 @@ struct MountainListView: View {
                                         endPoint: .bottomTrailing
                                     )
                                 )
-                                .frame(width: 30, height: 30)
+                                .frame(width: 23, height: 23)
                             
                             Image(systemName: "mountain.2.fill")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 23, height: 23)
+                                .frame(width: 18, height: 18)
                                 .foregroundColor(.white)
                         }
                         if let selected = viewModel.selectedMountain {
@@ -67,10 +77,16 @@ struct MountainListView: View {
                                 .foregroundColor(.neutrals2)
                             Text("\(selected.name)")
                                 .font(.headline)
+                                .bold()
                         }
                         else{
-                            Text("선택된 산 없음")
+                            Text("현재 산이")
                                 .font(.headline)
+                                .foregroundColor(.neutrals2)
+                            Text("아니산!!")
+                                .font(.headline)
+                                .foregroundColor(.accentColor)
+                                .bold()
                         }
                     }
                     .padding(.horizontal, 16)
@@ -82,6 +98,7 @@ struct MountainListView: View {
                     Spacer()
 
                 }
+                .padding(.top,8)
                 Spacer()
                 Spacer()
                 Spacer()
@@ -99,7 +116,9 @@ struct MountainListView: View {
                         ForEach(viewModel.closestMountains) { mountain in
                             MountainStackCardView(
                                 title: mountain.name,
-                                description: "위도: \(mountain.coordinate.latitude), 경도: \(mountain.coordinate.longitude)"
+                                description: "\(mountain.description)",
+                                distance: mountain.distance,
+                                summitMarker: mountain.summitMarkerCount
                             ) {
                                 viewModel.manager.chosenMountain = mountain
                                 coordinator.pop()

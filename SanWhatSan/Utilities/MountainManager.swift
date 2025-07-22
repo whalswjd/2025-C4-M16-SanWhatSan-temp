@@ -20,13 +20,13 @@ final class MountainManager: ObservableObject {
     @Published var chosenMountain: Mountain?
 
     private init() {
-        self.mountains = [
-            
-            //TODO: 추후 삭제
-            Mountain(name: "운제산", description: "경북", coordinate: Coordinate(latitude: 35.8401, longitude: 128.5554)),
-            Mountain(name: "도음산", description: "경북", coordinate: Coordinate(latitude: 35.8725, longitude: 128.6021)),
-            Mountain(name: "봉좌산", description: "경북", coordinate: Coordinate(latitude: 35.8602, longitude: 128.5703))
-        ]
+//        self.mountains = [
+//            
+//            //TODO: 추후 삭제
+//            Mountain(name: "운제산", description: "경북", coordinate: Coordinate(latitude: 35.8401, longitude: 128.5554), distance: 100, summitMarkerCount: 1),
+//            Mountain(name: "도음산", description: "경북", coordinate: Coordinate(latitude: 35.8725, longitude: 128.6021), distance: 100, summitMarkerCount: 1),
+//            Mountain(name: "봉좌산", description: "경북", coordinate: Coordinate(latitude: 35.8602, longitude: 128.5703), distance: 100, summitMarkerCount: 1)
+//        ]
         self.mountainNames = [
             "운제산", "도음산", "봉좌산"
         ]
@@ -57,11 +57,10 @@ final class MountainManager: ObservableObject {
                     let placemark = item.placemark
                     // 주소 컴포넌트
                     let street = placemark.thoroughfare ?? ""
-                    let number = placemark.subThoroughfare ?? ""
                     let city   = placemark.locality ?? ""
                     let admin  = placemark.administrativeArea ?? ""
                     
-                    let address = [admin, city, street + number]
+                    let address = [admin, city, street]
                         .filter { !$0.isEmpty }
                         .joined(separator: " ")
                     
@@ -72,7 +71,9 @@ final class MountainManager: ObservableObject {
                         coordinate: Coordinate(
                             latitude: coord.latitude,
                             longitude: coord.longitude
-                        )
+                        ),
+                        distance: 0,
+                        summitMarkerCount: 1
                     )
                 }
                 
@@ -88,20 +89,19 @@ final class MountainManager: ObservableObject {
         }
         
     }
-    //var found: [Mountain] = []
-
-    func getClosestMountains(from location: CLLocation, within radius: Double = 50000_000) -> [Mountain] {
-        mountains.compactMap { mountain in
-            print("getClosetMountains 실행(\(mountain.name))");
+    
+    func getClosestMountains(from location: CLLocation, within radius: Double = 50_000) -> [Mountain] {
+        return mountains.compactMap { mountain in
             let distance = CLLocation(
                 latitude: mountain.coordinate.latitude,
                 longitude: mountain.coordinate.longitude
             ).distance(from: location)
-            print(distance)
-            return distance <= radius ? (mountain, distance) : nil
+            guard distance <= radius else { return nil }
+            var m = mountain
+            m.distance = Int(distance)
+            return m
         }
-        .sorted { $0.1 < $1.1 }
-        .map { $0.0 }
+        .sorted { $0.distance < $1.distance }
     }
 
     func distance(from location: CLLocation, to mountain: Mountain) -> CLLocationDistance {
