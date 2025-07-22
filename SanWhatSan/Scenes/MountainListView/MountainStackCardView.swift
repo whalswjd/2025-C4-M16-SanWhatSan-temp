@@ -10,6 +10,9 @@ import SwiftUI
 struct MountainStackCardView: View {
         let title: String
         let description: String
+    let distance: Int
+    let summitMarker: Int
+    
     let action: () -> Void
 
         var body: some View {
@@ -50,11 +53,11 @@ struct MountainStackCardView: View {
                             .font(.headline)
                             .foregroundColor(.black)
                         //TODO: 거리 계산 변수 추가
-                        Text("\("100km") | \(description)")
+                        Text("\(distance) km | \(description)")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                         //TODO: 정상비 몇개 변수 추가
-                        Text("정상비 1개 있음")
+                        Text("정상비 \(summitMarker)개 있음")
                             .font(.caption)
                             .padding(.vertical, 4)
                             .padding(.horizontal, 10)
@@ -74,8 +77,8 @@ struct MountainStackCardView: View {
         }
 }
 
-#Preview {
-    MountainStackCardView(title: "봉좌산", description: "아", action: {
-        print("hi")
-    })
-}
+//#Preview {
+//    MountainStackCardView(title: "봉좌산", description: "아", action: {
+//        print("hi")
+//    })
+//}

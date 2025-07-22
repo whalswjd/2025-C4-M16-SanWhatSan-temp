@@ -116,7 +116,9 @@ struct MountainListView: View {
                         ForEach(viewModel.closestMountains) { mountain in
                             MountainStackCardView(
                                 title: mountain.name,
-                                description: "위도: \(mountain.coordinate.latitude), 경도: \(mountain.coordinate.longitude)"
+                                description: "\(mountain.description)",
+                                distance: mountain.distance,
+                                summitMarker: mountain.summitMarkerCount
                             ) {
                                 viewModel.manager.chosenMountain = mountain
                                 coordinator.pop()
